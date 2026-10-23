@@ -1,9 +1,0 @@
-BlazarLab Privado 13.04 Lite
-
-Pacote de aplicação experimental com seletor de método da galeria multifonte e núcleo de cálculo atualizado para diagnósticos Fisher–Shannon e inferência de modulação intrínseca.
-
-Para executar, sirva a pasta em um servidor estático local (por exemplo, `python -m http.server 8000`) e abra `http://localhost:8000/`. A abertura direta por `file://` pode impedir o carregamento local dos fragmentos por restrições do navegador.
-
-A versão é privada/experimental. Não publique esta pasta na vitrine pública do BlazarLab. Consulte o relatório de auditoria separado e o kit de validação da 13.04.
-
-Pendências: comparação externa com EntropyHub; calibração por simulações Monte Carlo do intervalo/limite da modulação; homologação externa da KDE e WPE/CI; verificação visual em navegador e dispositivos reais.
