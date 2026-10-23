@@ -1,0 +1,397 @@
+<div class="lab-root" id="labRuntimeRoot"><div class="app-shell" id="top">
+<section class="lab-hero" aria-labelledby="labHeroTitle">
+  <div class="lab-hero-copy">
+    <p class="lab-eyebrow"><span class="lab-status-dot" aria-hidden="true"></span> LABORATÓRIO · PROCESSAMENTO NO NAVEGADOR</p>
+    <h2 id="labHeroTitle">Calcule a variabilidade <em>das suas curvas.</em></h2>
+    <p>Importe uma curva de luz, confira a prévia e os diagnósticos temporais e execute os métodos por banda. A galeria avançada é habilitada conforme os dados disponíveis.</p>
+    <div class="lab-hero-actions"><button id="heroDemoBtn" class="button button-primary" type="button"><span>Explorar dados sintéticos</span><span aria-hidden="true">→</span></button><button id="heroLocalBtn" class="button button-secondary" type="button">Carregar meus dados</button></div>
+    <p class="lab-hero-disclosure">Arquivos locais não são enviados a um servidor. Se você optar por importar uma URL, a requisição será feita ao endereço que escolheu. Resultados Fisher–Shannon KDE e MSE-WPE/CI são experimentais nesta versão.</p>
+  </div>
+  <div class="lab-hero-art" aria-hidden="true">
+    <div class="lab-orbit lab-orbit-a"></div><div class="lab-orbit lab-orbit-b"></div>
+    <svg viewBox="0 0 360 130" class="lab-signal" fill="none" aria-hidden="true"><path d="M3 77 L22 77 L31 60 L42 93 L56 24 L70 103 L82 66 L96 74 L108 50 L121 86 L135 86 L146 34 L159 97 L173 69 L188 72 L202 53 L215 82 L228 82 L241 39 L254 99 L267 66 L280 75 L294 51 L307 82 L324 77 L357 77" stroke="url(#blazarLabSignalGradient)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="blazarLabSignalGradient" x1="0" y1="0" x2="360" y2="0"><stop stop-color="#9697FF"/><stop offset=".56" stop-color="#61DCC7"/><stop offset="1" stop-color="#F4BD79"/></linearGradient></defs></svg>
+    <div class="lab-art-caption"><span></span> PRÉVIA · ANÁLISE MULTIBANDA</div>
+  </div>
+</section>
+<div aria-live="polite" class="dependency-notice hidden" id="dependencyNotice" role="status"></div>
+
+<nav aria-label="Etapas da análise" class="workflow-steps">
+<button aria-current="step" class="workflow-step is-active" data-workflow-step="1" id="workflowStep1" type="button"><span>01</span><strong>Dados</strong><small>Carregar série</small></button>
+<span aria-hidden="true" class="workflow-connector"></span>
+<button aria-label="Etapa 2, Configuração. Carregue dados primeiro." class="workflow-step" data-workflow-step="2" disabled="" id="workflowStep2" title="Carregue ou gere uma série de dados primeiro" type="button"><span>02</span><strong>Configuração</strong><small>Validar e definir parâmetros</small></button>
+<span aria-hidden="true" class="workflow-connector"></span>
+<button aria-label="Etapa 3, Resultados. Calcule a análise primeiro." class="workflow-step" data-workflow-step="3" disabled="" id="workflowStep3" title="Calcule a análise para liberar os resultados" type="button"><span>03</span><strong>Resultados</strong><small>Comparar e exportar</small></button>
+<p aria-live="polite" class="workflow-status" id="workflowStatus">Comece carregando um arquivo ou experimente a demonstração.</p>
+</nav>
+<nav aria-label="Navegação do laboratório" class="section-nav">
+<a href="#inputStep"><span class="section-nav-step" aria-hidden="true">01</span><span>Laboratório principal</span></a>
+<a href="#resultsSection"><span class="section-nav-step" aria-hidden="true">02</span><span>Resultados</span></a>
+<a href="#advancedModes"><span class="section-nav-step" aria-hidden="true">03</span><span>Modos avançados</span></a>
+<a href="#scientificTools"><span class="section-nav-step" aria-hidden="true">04</span><span>Metodologia e auto-teste</span></a>
+</nav>
+<details class="validation-status-banner validation-status-details"><summary><strong>Status de validação</strong><span class="validation-status-pill">Experimental · ver detalhes</span></summary><div class="validation-status-details-body"><p>Testes de regressão locais estão incluídos. A equivalência numérica completa com EntropyHub e a validação com curvas Swift-BAT reais ainda precisam ser confirmadas antes de uso como resultado de publicação.</p></div></details>
+<section class="workspace-grid">
+<aside class="panel import-panel" id="inputStep">
+<div class="panel-heading"><div><span class="step">01</span><h2>Entrada de dados</h2></div><span class="privacy-badge" title="Os arquivos e os cálculos científicos ficam no navegador">● DADOS NO NAVEGADOR</span></div>
+<div aria-label="Método de importação" class="import-tabs" role="tablist">
+<button aria-controls="tabLocal" aria-selected="true" class="import-tab active tab-priority" data-tab="tabLocal" id="tabBtnLocal" role="tab" type="button"><span>Arquivo local</span><small>recomendado</small></button>
+<button aria-controls="tabUrl" aria-selected="false" class="import-tab" data-tab="tabUrl" id="tabBtnUrl" role="tab" type="button">Colar link</button>
+<button aria-controls="tabNasa" aria-selected="false" class="import-tab" data-tab="tabNasa" id="tabBtnNasa" role="tab" type="button">Biblioteca NASA</button>
+</div>
+<div aria-labelledby="tabBtnLocal" class="import-tab-panel" id="tabLocal" role="tabpanel">
+<div aria-label="Selecionar ou arrastar um arquivo" class="dropzone" id="dropzone" role="button" tabindex="0">
+<div class="upload-icon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v4A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-4"></path></svg></div>
+<strong id="dropzoneHeadline">Escolha um arquivo de curva de luz</strong>
+<span id="dropzoneHelp">ou <u>procure no computador</u></span>
+<small>.lc.gz · FITS · .lc · .txt · .csv · .tsv</small>
+<input accept=".gz,.lc,.fits,.fit,.fts,.txt,.csv,.tsv,.dat,application/fits,text/plain,text/csv" hidden="" id="fileInput" type="file"/>
+</div>
+<details class="format-guide"><summary>Qual formato devo escolher?</summary><div><p><strong>Arquivo .lc/.txt/.csv/.tsv:</strong> use quando o arquivo contém uma tabela legível com tempo e medidas.</p><p><strong>Arquivo .lc.gz:</strong> o laboratório tenta detectar a compactação pelo conteúdo e descompactar no navegador.</p><p><strong>FITS:</strong> use um FITS compatível com a leitura de tabelas deste projeto. Depois, confirme o mapeamento de tempo, fluxo e incerteza.</p></div></details>
+</div>
+<div aria-labelledby="tabBtnUrl" class="import-tab-panel hidden" id="tabUrl" role="tabpanel">
+<div class="url-import-heading"><strong>Importar de um endereço</strong><span>URL direta</span></div>
+<p class="microcopy">Cole o link direto para um arquivo de curva de luz, como `.lc`, `.lc.gz`, `.fits`, `.csv` ou `.txt`.</p>
+<label class="field url-field"><span>Link do arquivo</span><input autocomplete="url" id="directUrlInput" inputmode="url" placeholder="https://.../curva.lc.gz" type="url"/></label>
+<div class="url-actions">
+<button class="button button-primary" id="loadUrlBtn" type="button">Tentar importar </button>
+<a aria-disabled="true" class="button button-secondary disabled-link" download="" href="#" id="openDirectLink" rel="noopener noreferrer">Baixar arquivo ↓</a>
+</div>
+<p aria-live="polite" class="microcopy" id="urlHelp">A importação direta só funciona quando o servidor permite a leitura pelo navegador. Se falhar, baixe o arquivo pelo link original e escolha-o na aba “Arquivo local”.</p>
+</div>
+<div aria-labelledby="tabBtnNasa" class="import-tab-panel hidden" id="tabNasa" role="tabpanel">
+<div class="divider-label"><span>SWIFT-BAT · EXEMPLO</span></div>
+<a class="source-link" href="https://swift.gsfc.nasa.gov/bat_survey/bs157mon/8band_snapshot_lc/BAT_157m_eight_band_snapshot_SWIFT_J0010.5%2B1057.lc.gz" rel="noopener noreferrer" target="_blank"><span class="source-icon">↗</span><span><strong>Swift-BAT · exemplo de 8 bandas</strong><small>SWIFT J0010.5+1057 / Mrk 1501</small></span><span class="arrow">→</span></a>
+<div aria-labelledby="nasaLibraryTitle" class="nasa-library">
+<div class="subsection-title"><span id="nasaLibraryTitle">Biblioteca NASA / Swift-BAT</span><span class="hint">157 meses</span></div>
+<p class="microcopy">Digite o nome Swift da fonte para gerar o link oficial da curva snapshot de oito bandas.</p>
+<label class="field"><span>Nome Swift da fonte</span><input id="nasaSourceName" placeholder="Ex.: SWIFT J0010.5+1057" type="text" value="SWIFT J0010.5+1057"/></label>
+<button class="button button-secondary button-full" id="nasaPrepareBtn" type="button">Preparar link da curva NASA ↗</button>
+<a class="source-link hidden" download="" href="#" id="nasaDownloadLink" rel="noopener noreferrer"><span class="source-icon">↓</span><span><strong>Baixar curva .lc.gz</strong><small id="nasaDownloadLabel">Link NASA preparado</small></span><span class="arrow">→</span></a>
+<p aria-live="polite" class="microcopy" id="nasaDownloadHelp">O botão tenta salvar o arquivo diretamente no seu computador.</p>
+<a class="catalog-link" href="https://swift.gsfc.nasa.gov/results/bs157mon/" rel="noopener noreferrer" target="_blank">Abrir catálogo completo de fontes NASA ↗</a>
+<p class="microcopy">Se a importação direta for bloqueada pelo servidor, baixe o arquivo e selecione-o em “Arquivo local”. O site não usa um proxy externo.</p>
+</div>
+</div>
+<div aria-live="polite" class="file-status" id="fileStatus">Nenhum arquivo carregado.</div>
+<div aria-live="polite" class="validation-summary hidden" id="validationSummary"></div>
+<div aria-live="polite" class="prepared-curve-export hidden" id="preparedCurveExport">
+<div><span class="chart-kicker">DADOS CARREGADOS</span><strong>Exportar curva para CSV</strong><p>Gera uma tabela longa com tempo, banda, fluxo e incerteza das bandas selecionadas. O arquivo pode ser enviado diretamente à galeria multifonte.</p></div>
+<button class="button button-primary" disabled="" id="downloadPreparedCurveCsvBtn" type="button">↓ Baixar CSV inicial</button>
+<span aria-live="polite" class="microcopy" id="preparedCurveExportStatus" role="status"></span>
+</div>
+<div aria-live="polite" class="data-preview hidden" id="dataPreview"><div class="data-preview-heading"><strong>Prévia da série</strong><span id="dataPreviewLabel">Primeira banda mapeada</span></div><div aria-label="Prévia rápida da curva de luz carregada" class="data-preview-plot" id="dataPreviewPlot" role="img"></div><p class="microcopy">Prévia visual de uma banda para conferir o arquivo; não substitui a validação das colunas.</p></div>
+<div class="privacy-note"><span class="lock-icon">▣</span><span><strong>Seus dados e cálculos ficam no navegador.</strong> O arquivo selecionado não é enviado para análise a um servidor. As bibliotecas gráficas desta versão são carregadas dos arquivos locais incluídos no pacote. Se você optar por importar uma URL, o navegador fará uma requisição ao servidor escolhido, que poderá receber dados técnicos da conexão; use Arquivo local para manter a leitura limitada ao dispositivo.</span></div>
+</aside>
+<section class="panel setup-panel hidden" id="setupPanel">
+<div class="panel-heading"><div><span class="step">02</span><h2>Configuração</h2></div><span class="mini-label" id="dataBadge">AGUARDANDO DADOS</span></div>
+<div class="form-grid">
+<label class="field"><span>Objeto / fonte <small>opcional</small></span><input id="sourceName" placeholder="Ex.: SWIFT J0010.5+1057" type="text" value=""/></label>
+<label class="field"><span>Instrumento <small>opcional</small></span><input id="instrumentName" placeholder="Ex.: Swift-BAT" type="text" value=""/></label>
+</div>
+<div class="subsection-title"><span>Parâmetros de Sample Entropy</span><span class="hint" title="m é a dimensão do padrão; r é a tolerância">ⓘ</span></div>
+<div class="form-grid params-grid">
+<label class="field"><span>Dimensão (m) <small>comprimento do padrão</small></span><select id="embedding"><option value="1">1</option><option selected="" value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+<label class="field"><span>Tolerância (r) <small>distância máxima relativa a σ</small></span><div class="input-unit"><input id="tolerance" max="2" min="0.01" step="0.01" type="number" value="0.2"/><span>× σ</span></div></label>
+</div>
+<div class="tolerance-range-wrap"><div class="tolerance-range-labels"><span>Mais restritivo</span><output id="toleranceValue">0,20 × σ</output><span>Mais permissivo</span></div><input aria-label="Ajustar tolerância entre 0,05 e 0,50 vezes o desvio-padrão" id="toleranceSlider" max="0.5" min="0.05" step="0.01" type="range" value="0.2"/></div>
+<div class="parameter-preset-row"><p class="microcopy">Referência inicial: m = 2 e r = 0,2σ. A tolerância é multiplicada pelo desvio-padrão de cada banda; ela não é uma unidade absoluta de fluxo.</p><button class="button button-secondary" id="recommendedParamsBtn" title="Restaurar os parâmetros iniciais recomendados" type="button">Usar parâmetros de referência</button></div>
+<details class="concept-guide"><summary>O que significam os parâmetros e as métricas?</summary><div><p><strong>Dimensão m:</strong> comprimento dos padrões comparados na série temporal.</p><p><strong>Tolerância r:</strong> distância máxima, relativa ao desvio-padrão, para considerar dois padrões semelhantes.</p><p><strong>Sample Entropy (SampEn):</strong> quantifica a frequência com que padrões semelhantes deixam de permanecer semelhantes quando são estendidos por mais um ponto. Ela não é, isoladamente, uma prova de caos físico.</p><p><strong>Modulação intrínseca:</strong> estima a amplitude relativa da variabilidade após descontar a contribuição média dos erros de medição; requer valores de incerteza válidos.</p></div></details>
+<details class="column-mapping-details" id="columnMappingDetails">
+<summary><span>Mapeamento automático — editar</span><span class="mapping-count" id="mappingCount">0 colunas detectadas</span></summary>
+<p class="microcopy mapping-instructions">Confira qual coluna representa o tempo e a taxa de cada banda. A detecção automática é uma sugestão; você pode ajustá-la.</p>
+<div class="mapping-empty" id="mappingArea">Carregue um arquivo para selecionar as colunas.</div>
+</details>
+<div aria-live="polite" class="analysis-progress hidden" id="analysisProgress" role="status"><div class="analysis-progress-heading"><strong id="analysisProgressLabel">Preparando análise…</strong><span id="analysisProgressPercent">0%</span></div><progress id="analysisProgressBar" max="100" value="0">0%</progress><p class="microcopy" id="analysisProgressDetail">O cálculo ocorre no navegador. Arquivos maiores podem levar mais tempo.</p></div>
+<button class="button button-primary button-full" disabled="" id="analyzeBtn" type="button"><span>Calcular SampEn + modulação</span></button>
+<div aria-live="polite" class="analysis-message" id="analysisMessage"></div>
+</section>
+</section>
+<section class="results-section hidden" id="resultsSection">
+<div class="section-title-row"><div><div class="eyebrow"><span>03 / RESULTADOS</span></div><h2>Uma fonte, <em>oito assinaturas.</em></h2><p id="resultsSubtitle">Resultados por banda de energia.</p></div><details class="export-menu"><summary class="button button-secondary">Exportar resultados ▾</summary><div class="export-menu-items"><button class="button button-secondary" id="downloadCsvBtn" type="button">CSV · tabela completa</button><button class="button button-secondary" id="downloadSessionJsonBtn" type="button">Sessão JSON</button><button class="button button-secondary" id="downloadPngBtn" type="button">PNG · SampEn</button><button class="button button-secondary" id="downloadModulationPngBtn" type="button">PNG · modulação</button><button class="button button-secondary" id="printReportBtn" type="button">Imprimir / salvar PDF</button><button class="button button-secondary" id="importSessionBtn" type="button">Importar sessão JSON</button><input accept=".json,application/json" hidden="" id="importSessionFile" type="file"/></div></details></div>
+<div class="demo-note hidden" id="demoResultsNotice" role="note"><strong>Modo demonstração</strong><span>Estas curvas são sintéticas, geradas no navegador para apresentar o fluxo de análise. Não são dados observacionais de um objeto real.</span></div>
+<div class="metric-grid">
+<article class="metric-card"><span>Bandas analisadas</span><strong id="metricBands">—</strong><small>de 8 bandas</small></article>
+<article class="metric-card"><span>SampEn média</span><strong id="metricMean">—</strong><small>entre bandas válidas</small></article>
+<article class="metric-card"><span>Maior irregularidade</span><strong id="metricMax">—</strong><small id="metricMaxBand">banda —</small></article>
+<article class="metric-card"><span>Pontos válidos</span><strong id="metricPoints">—</strong><small>na série temporal selecionada</small></article>
+<article class="metric-card"><span>Modulação intrínseca média</span><strong id="metricModMean">—</strong><small>entre bandas válidas (%)</small></article>
+</div>
+<div class="chart-layout">
+<article class="panel chart-panel entropy-panel"><div class="chart-heading"><div><span class="chart-kicker">COMPARAÇÃO ENTRE BANDAS</span><h3>Sample Entropy por energia</h3></div></div><div class="chart-container entropy-chart-container"><canvas aria-label="Gráfico de Sample Entropy por banda" id="entropyChart" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Valores calculados independentemente para cada banda. Uma SampEn maior indica menor repetibilidade dos padrões, nas condições e escala de amostragem analisadas.</p></article>
+<article class="panel summary-panel results-table-panel"><div class="chart-heading"><div><span class="chart-kicker">RESUMO NUMÉRICO</span><h3>Resultados por banda</h3></div></div><div class="table-wrap"><table id="resultsTable"><thead><tr><th>Banda</th><th>N válido</th><th>A / B pares</th><th>σ</th><th>SampEn</th><th>IC aprox. 95%</th><th>Modulação intrínseca (%)</th><th>H KDE (nats)</th><th>N<sub>X</sub> KDE</th><th>I<sub>F</sub> KDE</th><th>CI WPE (nats)</th><th>Status SampEn</th><th>Status modulação</th><th>Status Fisher–Shannon</th><th>Status WPE/CI</th></tr></thead><tbody><tr><td class="empty-cell" colspan="15">Execute a análise para preencher esta tabela.</td></tr></tbody></table></div><p class="chart-footnote">A e B usam o mesmo conjunto de N−m inícios de padrão, conforme Richman &amp; Moorman (2000). O IC de 95% é uma aproximação t para p=A/B; como os pares podem ser dependentes por sobreposição, use-o como diagnóstico de incerteza, não como garantia de cobertura.</p></article>
+</div>
+<div class="chart-layout additional-chart-layout">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">AMPLITUDE DE VARIABILIDADE</span><h3>Modulação intrínseca por energia</h3></div></div><div class="chart-container"><canvas aria-label="Índice de modulação intrínseco por banda de energia" id="modulationChart" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Definição do artigo: m = 100 × √(S² − ⟨σ²⟩) / ⟨S⟩. O cálculo usa apenas pares fluxo–incerteza válidos; variância corrigida negativa ou fluxo médio não positivo ficam sinalizados, não convertidos em zeros.</p></article>
+<article class="panel summary-panel"><div class="chart-heading"><div><span class="chart-kicker">CRITÉRIOS DE CÁLCULO</span><h3>Como interpretar a modulação</h3></div></div><p class="microcopy">O índice intrínseco desconta a variância média de medição à variância observada. Um resultado de 0% significa que a variância intrínseca estimada é zero. Uma variância corrigida negativa indica que esta estimativa não fornece um índice intrínseco real.</p><p class="microcopy">A coluna de incerteza é necessária. Se houver erros ausentes ou inválidos, a tabela informa quantos pontos foram excluídos do cálculo da modulação. A série usada na SampEn continua independente deste requisito.</p>
+<div class="modulation-reading-flow" aria-label="Etapas de interpretação da modulação intrínseca">
+  <div class="modulation-flow-step"><span>01</span><strong>Variância observada</strong><small>S²</small></div>
+  <span class="modulation-flow-arrow" aria-hidden="true">−</span>
+  <div class="modulation-flow-step"><span>02</span><strong>Ruído de medição</strong><small>⟨σ²⟩</small></div>
+  <span class="modulation-flow-arrow" aria-hidden="true">→</span>
+  <div class="modulation-flow-step"><span>03</span><strong>Variância intrínseca</strong><small>S² − ⟨σ²⟩</small></div>
+</div>
+<div class="modulation-reading-outcomes">
+  <span class="outcome-defined"><i aria-hidden="true"></i>Valor definido: raiz real</span>
+  <span class="outcome-zero"><i aria-hidden="true"></i>0%: variância intrínseca estimada nula</span>
+  <span class="outcome-undefined"><i aria-hidden="true"></i>Negativa: estimativa indisponível</span>
+</div>
+<div class="method-note"><div class="method-icon">i</div><div><strong>Importante para Swift-BAT</strong><p>Esta página aplica os métodos a dados em bandas de energia. Os resultados de rádio do artigo OVRO não devem ser comparados numericamente como se fossem a mesma amostra ou o mesmo instrumento.</p></div></div></article>
+</div>
+        <div class="lab-results-intro"><strong>Métodos experimentais nesta versão:</strong> Fisher–Shannon usa uma estimativa KDE de H, N<sub>X</sub> e I<sub>F</sub>; MSE-WPE/CI usa WPE ponderada em oito escalas e CI como soma discreta das escalas válidas. Estes resultados precisam de validação numérica independente antes de uso em publicação.</div>
+        <div class="advanced-method-explorer" id="advancedMethodExplorer">
+  <div class="advanced-method-tabs" role="tablist" aria-label="Escolher método para explorar resultados">
+    <button class="advanced-method-tab is-active" id="advancedTabSampen" type="button" role="tab" aria-selected="true" aria-controls="advancedPanelSampen" tabindex="0" data-advanced-method-tab="sampen"><span class="advanced-method-number">01</span><span class="advanced-method-tab-copy"><strong>Sample Entropy</strong><small>Padrões locais</small></span><span class="advanced-method-chevron" aria-hidden="true">↗</span></button>
+    <button class="advanced-method-tab" id="advancedTabFisher" type="button" role="tab" aria-selected="false" aria-controls="advancedPanelFisher" tabindex="-1" data-advanced-method-tab="fisher"><span class="advanced-method-number">02</span><span class="advanced-method-tab-copy"><strong>Fisher–Shannon</strong><small>Distribuição e gradientes</small></span><span class="advanced-method-chevron" aria-hidden="true">↗</span></button>
+    <button class="advanced-method-tab" id="advancedTabMse" type="button" role="tab" aria-selected="false" aria-controls="advancedPanelMse" tabindex="-1" data-advanced-method-tab="mse"><span class="advanced-method-number">03</span><span class="advanced-method-tab-copy"><strong>MSE-WPE / CI</strong><small>Estrutura multiescala</small></span><span class="advanced-method-chevron" aria-hidden="true">↗</span></button>
+  </div>
+  <section class="advanced-method-panel is-active" id="advancedPanelSampen" role="tabpanel" aria-labelledby="advancedTabSampen" tabindex="0" data-advanced-method-panel="sampen">
+    <div class="advanced-method-layout">
+      <article class="panel chart-panel advanced-method-chart-card"><div class="chart-heading"><div><span class="chart-kicker">01 / PADRÕES LOCAIS</span><h3>Sample Entropy por banda</h3></div><span class="method-result-pill">SampEn</span></div><div class="chart-container"><canvas id="advancedSampenChart" aria-label="Sample Entropy calculada para as oito bandas de energia" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Cada barra representa a SampEn calculada separadamente para uma banda com os mesmos parâmetros m e r exibidos no resumo da análise.</p></article>
+      <aside class="panel advanced-method-insight"><span class="chart-kicker">COMO LER</span><h3>Os padrões continuam se repetindo?</h3><p>Uma SampEn maior indica menos pares de trechos semelhantes que continuam semelhantes quando se acrescenta um ponto. A leitura depende de m, r, comprimento e qualidade da série.</p><div class="method-insight-facts"><div><span>Saída</span><strong>SampEn por banda</strong></div><div><span>Parâmetros</span><strong>Compartilhados na comparação</strong></div><div><span>Controle</span><strong>Contagens A e B</strong></div></div><a class="button button-secondary advanced-method-link" href="#scientificTools">Explorar sensibilidade m × r <span aria-hidden="true">↗</span></a></aside>
+    </div>
+  </section>
+  <section class="advanced-method-panel" id="advancedPanelFisher" role="tabpanel" aria-labelledby="advancedTabFisher" tabindex="0" data-advanced-method-panel="fisher" hidden>
+    <div class="advanced-method-layout">
+      <article class="panel chart-panel advanced-method-chart-card"><div class="chart-heading"><div><span class="chart-kicker">02 / DISTRIBUIÇÃO + GRADIENTES</span><h3>Plano Fisher–Shannon por banda</h3></div><span class="method-result-pill experimental">KDE · EXPERIMENTAL</span></div><div class="chart-container"><canvas id="fisherShannonChart" aria-label="Plano Fisher-Shannon experimental por banda, calculado por estimativa KDE" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Cada ponto é uma banda. A potência entrópica Nₓ e a informação de Fisher I_F dependem da densidade estimada e do alisamento escolhido.</p></article>
+      <aside class="panel advanced-method-insight"><span class="chart-kicker">COMO LER</span><h3>Distribuição global e detalhes locais</h3><p>Shannon caracteriza a distribuição do fluxo; Fisher responde à estrutura local da densidade. O ponto combina as duas coordenadas, mas a estimativa KDE continua exploratória nesta versão.</p><div class="method-insight-facts"><div><span>Coordenada X</span><strong>Nₓ · potência entrópica</strong></div><div><span>Coordenada Y</span><strong>I_F · informação de Fisher</strong></div><div><span>Limite</span><strong>Sensível ao alisamento KDE</strong></div></div><p class="advanced-method-caution">Não interprete a posição como mecanismo físico comprovado nem compare resultados sem verificar unidade, largura de banda e convenção do estimador.</p></aside>
+    </div>
+  </section>
+  <section class="advanced-method-panel" id="advancedPanelMse" role="tabpanel" aria-labelledby="advancedTabMse" tabindex="0" data-advanced-method-panel="mse" hidden>
+    <div class="advanced-method-layout advanced-method-layout-mse">
+      <div class="advanced-method-chart-pair">
+        <article class="panel chart-panel advanced-method-chart-card"><div class="chart-heading"><div><span class="chart-kicker">CURVA MULTIESCALA</span><h3>WPE × escala</h3></div><span class="method-result-pill experimental">WPE</span></div><div class="chart-container"><canvas id="wpeScaleChart" aria-label="Entropia de permutação ponderada por escala para cada banda" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Linhas representam bandas; escalas sem estimativa válida ficam ausentes, em vez de virar zero.</p></article>
+        <article class="panel chart-panel advanced-method-chart-card"><div class="chart-heading"><div><span class="chart-kicker">RESUMO DAS ESCALAS</span><h3>Complexity Index</h3></div><span class="method-result-pill experimental">CI</span></div><div class="chart-container"><canvas id="ciChart" aria-label="Complexity Index experimental por banda" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Nesta implementação, CI é a soma discreta das WPE válidas nas oito escalas, sem normalização.</p></article>
+      </div>
+      <aside class="panel advanced-method-insight"><span class="chart-kicker">COMO LER</span><h3>A diversidade persiste quando a escala muda?</h3><p>A WPE mede diversidade de padrões ordinais ponderados pela amplitude após a agregação temporal. O CI resume a curva de escalas pela convenção descrita nesta demonstração.</p><div class="method-insight-facts"><div><span>Escalas</span><strong>τ = 1…8</strong></div><div><span>Padrões</span><strong>Dimensão ordinal 4</strong></div><div><span>Resumo</span><strong>Soma discreta da WPE</strong></div></div><p class="advanced-method-caution">A convenção de CI, a normalização, o atraso e a regra de coarse-graining precisam coincidir antes de comparar estudos. WPE/CI permanece experimental.</p></aside>
+    </div>
+  </section>
+</div>
+<article class="panel summary-panel method-availability-panel"><div class="chart-heading"><div><span class="chart-kicker">DIAGNÓSTICO DE ESTIMABILIDADE</span><h3>Disponibilidade por banda</h3><p class="microcopy">Veja, banda a banda, quais medidas foram estimáveis. Valores ausentes não são interpretados como zero.</p></div><span class="method-result-pill">8 bandas</span></div><div class="lab-method-status-list" id="labMethodStatusList" role="status" aria-live="polite"><p>Execute os cálculos para ver quais métodos produziram estimativas válidas em cada banda.</p></div><p class="chart-footnote">O motivo de cada método não estimável é preservado na tabela de resultados e na exportação.</p></article>
+<details class="advanced-visualizations individual-curves-details" id="individualCurvesDetails"><summary><span>Explorar curvas individuais</span><small>Oito séries separadas · gráficos gerados somente ao abrir</small></summary><div class="advanced-chart-content"><div class="lightcurves-head"><div><span class="chart-kicker">SÉRIES TEMPORAIS</span><h3>Curvas de luz individuais</h3></div><div class="toggle-row"><label class="check-label"><input id="normalizeCurves" type="checkbox"/><span>Normalizar por banda (z-score)</span></label></div></div><div class="lightcurve-grid" id="lightcurveGrid"></div></div></details>
+<div class="chart-layout additional-chart-layout">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">SOBREPOSIÇÃO MULTIBANDA</span><h3>As oito curvas de luz no mesmo gráfico</h3></div></div><div class="sampen-match-controls"><label class="check-label"><input id="showSampenMatches" type="checkbox"/><span>Mostrar correspondências da SampEn</span></label><label class="field sampen-match-band-field"><span>Banda destacada</span><select aria-label="Banda para mostrar correspondências" id="sampenMatchBandSelect"><option value="0">14–20 keV</option><option value="1">20–24 keV</option><option value="2">24–35 keV</option><option value="3">35–50 keV</option><option value="4">50–75 keV</option><option value="5">75–100 keV</option><option value="6">100–150 keV</option><option value="7">150–195 keV</option></select></label></div><div class="chart-container"><canvas aria-label="Sobreposição das curvas de luz das oito bandas com correspondências SampEn opcionais" id="lightcurveOverlayChart" role="img" tabindex="0"></canvas></div><p aria-live="polite" class="chart-footnote" id="sampenMatchStatus">As correspondências estão desligadas. Ative a opção para destacar pares de padrões semelhantes na banda selecionada.</p><p class="chart-footnote">Linhas tracejadas representam padrões semelhantes de dimensão m (B); linhas contínuas mostram pares que continuam semelhantes na dimensão m+1 (A). Apenas uma amostra dos pares é desenhada para manter o gráfico legível; os cálculos completos não são alterados. Use z-score para comparar formas temporais em escalas semelhantes.</p></article>
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">SAMPEN TEMPORAL</span><h3>Sample Entropy por janela, bandas sobrepostas</h3></div></div><div class="form-grid window-controls"><label class="field"><span>Pontos por janela</span><select id="sampenWindowPoints"><option value="100">100</option><option selected="" value="200">200</option><option value="300">300</option><option value="500">500</option><option value="800">800</option><option value="1000">1000</option></select></label><label class="field"><span>Passo entre janelas</span><select id="sampenWindowStep"><option value="50">50</option><option value="100">100</option><option selected="" value="200">200</option><option value="300">300</option><option value="400">400</option></select></label></div><div class="article-actions temporal-actions"><button class="button button-secondary" id="calculateTemporalSampenBtn" type="button">Calcular SampEn temporal</button><button class="button button-danger" hidden="" id="cancelTemporalSampenBtn" type="button">Cancelar cálculo</button></div><p aria-live="polite" class="analysis-message" id="temporalSampenStatus">Escolha de 100 a 1000 observações por janela. O algoritmo utiliza busca de candidatos ordenada para acelerar janelas maiores.</p><div class="chart-container"><canvas aria-label="Sample Entropy ao longo do tempo, sobreposta por banda" id="temporalSampenOverlayChart" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Cada ponto representa uma janela de observações. A posição temporal usa o ponto central da janela; lacunas e cadência irregular precisam ser consideradas na interpretação.</p></article>
+</div>
+<div class="method-note"><div class="method-icon">i</div><div><strong>Como interpretar</strong><p id="methodNoteText">A SampEn não usa o valor absoluto do tempo entre observações; ela avalia a sequência dos pontos válidos pela ordem de amostragem. Curvas com cadência muito irregular, lacunas longas ou poucas observações exigem cautela na interpretação.</p></div></div>
+<details class="advanced-visualizations temporal-quality-details" id="temporalQualityDetails"><summary><span>Qualidade da amostragem temporal</span><small>Cadência, tempos repetidos, lacunas e valores excluídos</small></summary><div class="advanced-chart-content"><p class="microcopy" id="temporalQualitySummary">Execute a análise para gerar o diagnóstico temporal.</p><div class="table-wrap"><table id="temporalQualityTable"><thead><tr><th>Banda</th><th>N válido</th><th>Linhas excluídas</th><th>Tempos repetidos</th><th>Δt mediana</th><th>CV(Δt)</th><th>Lacunas &gt; 3× mediana</th></tr></thead><tbody id="temporalQualityTableBody"><tr><td class="empty-cell" colspan="7">Execute a análise para preencher este diagnóstico.</td></tr></tbody></table></div><p class="chart-footnote">O limite de lacuna &gt; 3× a mediana é uma heurística descritiva, não um corte científico universal. O painel não remove, combina nem interpola observações. Tempos repetidos permanecem como linhas distintas e devem ser avaliados conforme o instrumento e o significado dos dados.</p></div></details>
+<details class="advanced-visualizations scientific-tools" id="scientificTools">
+<summary><span>Metodologia, sensibilidade e auto-teste</span><small>Diagnóstico sob demanda · sem alterar os resultados originais</small></summary>
+<div class="advanced-chart-content">
+<section class="science-status-panel">
+<h3>Validação e limitações</h3>
+<p>O auto-teste verifica invariantes do código e casos conhecidos simples. Ele não substitui a comparação independente com EntropyHub nem a validação com curvas observacionais reais.</p>
+<button class="button button-secondary" id="runSelfTestBtn" type="button">Executar auto-teste</button>
+<div aria-live="polite" class="science-test-result" id="selfTestResult" role="status">Auto-teste ainda não executado nesta sessão.</div>
+</section>
+<section class="science-status-panel">
+<h3>Mapa de sensibilidade da SampEn (m × r)</h3>
+<p>Recalcula a mesma série em uma grade pequena de dimensões e tolerâncias. Isto avalia sensibilidade aos parâmetros, não gera uma nova estimativa independente nem altera a análise principal.</p>
+<div class="sensitivity-demo-row"><button class="button button-secondary" id="sensitivityDemoBtn" type="button">✦ Testar com dados demonstrativos</button><span class="microcopy">Substitui a análise atual por uma série sintética de 8 bandas.</span></div>
+<div class="form-grid sensitivity-controls">
+<label class="field"><span>Banda para análise</span><select id="sensitivityBandSelect"><option value="0">14–20 keV</option><option value="1">20–24 keV</option><option value="2">24–35 keV</option><option value="3">35–50 keV</option><option value="4">50–75 keV</option><option value="5">75–100 keV</option><option value="6">100–150 keV</option><option value="7">150–195 keV</option></select></label>
+<div class="field"><span>Ação</span><button class="button button-secondary" disabled="" id="runSensitivityBtn" type="button">Calcular mapa m × r</button></div>
+</div>
+<p aria-live="polite" class="analysis-message" id="sensitivityStatus" role="status">Execute uma análise. Bandas com pelo menos 8 pontos ficam selecionáveis; séries longas usam uma amostra sistemática de até 1.200 pontos somente para este mapa.</p>
+<div aria-label="Exportar mapa de sensibilidade" class="sensitivity-export-actions hidden" id="sensitivityExportActions"><button class="button button-secondary" disabled="" id="downloadSensitivityPngBtn" type="button">↓ Baixar mapa PNG</button><button class="button button-secondary" disabled="" id="downloadSensitivityCsvBtn" type="button">↓ Baixar valores CSV</button></div>
+<div aria-label="Mapa de sensibilidade da SampEn por m e r" class="sensitivity-grid" id="sensitivityGrid"></div>
+</section>
+</div>
+</details>
+<details class="reproducibility-panel" id="reproducibilityPanel"><summary>Reprodutibilidade e proveniência</summary><dl class="repro-grid"><div><dt>Fonte / arquivo</dt><dd id="reproSource">—</dd></div><div><dt>Instrumento</dt><dd id="reproInstrument">—</dd></div><div><dt>Tipo de dados</dt><dd id="reproDatasetType">—</dd></div><div><dt>Parâmetros</dt><dd id="reproParams">—</dd></div><div><dt>Algoritmo</dt><dd id="reproAlgorithm">—</dd></div><div><dt>Versão da interface</dt><dd id="reproVersion">13.01</dd></div><div><dt>Data e hora</dt><dd id="reproTimestamp">—</dd></div><div class="repro-hash"><dt>Identificador do arquivo</dt><dd id="reproHash">—</dd></div></dl><p class="microcopy">O identificador permite conferir se o arquivo usado é o mesmo. A sessão JSON não contém as observações brutas; guarde o arquivo original junto com os parâmetros exportados.</p></details>
+<div class="results-footer"><span>BlazarLab · processamento dos dados no navegador</span><span id="generatedAt">—</span></div>
+</section>
+<details class="advanced-modes" id="advancedModes"><summary aria-label="Abrir ou recolher modos avançados"><span class="advanced-modes-title">Modos avançados</span><small>Catálogo individual e galeria multifonte</small><span class="advanced-modes-cta"><span class="advanced-modes-cta-text">Clique para explorar</span><span aria-hidden="true" class="advanced-modes-cta-icon">↓</span></span></summary>
+<div class="advanced-modes-content">
+<section class="analysis-section" id="catalogAnalysis">
+<div class="section-title-row">
+<div>
+<div class="eyebrow"><span>04 / CATÁLOGO INDIVIDUAL</span></div>
+<h2>Explore seus <em>dados.</em></h2>
+<p>Importe um catálogo com uma linha por objeto e explore distribuições, comparações de classes e relações entre métricas. O processamento acontece no navegador.</p>
+</div>
+<div class="export-actions">
+<button class="button button-secondary" id="downloadArticleTemplateBtn" type="button">↓ Modelo CSV</button>
+</div>
+</div>
+<div class="method-note data-method-note">
+<div class="method-icon">i</div>
+<div>
+<strong>Use os seus próprios dados</strong>
+<p>Os gráficos são calculados a partir da tabela importada. Para histogramas, comparações de classe, dispersões e bolhas, cada linha deve representar a unidade estatística escolhida. O laboratório é independente e trabalha com os dados que você importar.</p>
+</div>
+</div>
+<article class="panel article-upload-panel">
+<div class="panel-heading"><div><span class="step">04A</span><h2>Gerar gráficos a partir do catálogo</h2></div><span class="mini-label">CSV / TSV</span></div>
+<p class="microcopy article-upload-intro">Importe uma tabela com uma linha por objeto. O site gera histogramas, distribuições sobrepostas por classe, dispersões, bolhas e resumos estatísticos quando as colunas necessárias estiverem disponíveis. O arquivo permanece no navegador.</p>
+<div class="article-template-row">
+<div>
+<strong>Formato recomendado</strong>
+<code>source,class,sampen,modulation_index_percent</code>
+<p class="microcopy">Use os nomes acima ou mapeie as colunas manualmente depois de carregar o arquivo. O índice de modulação deve estar em porcentagem, por exemplo 12,8 para 12,8%.</p>
+</div>
+<label class="button button-primary file-pick-button" for="articleDataFile">Selecionar CSV/TSV</label>
+<input accept=".csv,.tsv,.txt,text/csv,text/plain" hidden="" id="articleDataFile" type="file"/>
+</div>
+<div class="hidden article-mapping-panel" id="articleMappingPanel">
+<div class="subsection-title"><span>Mapeamento das colunas</span><span class="hint" id="articleFileLabel">—</span></div>
+<div class="form-grid article-mapping-grid">
+<label class="field"><span>Fonte / objeto</span><select id="articleSourceColumn"></select></label>
+<label class="field"><span>Classe</span><select id="articleClassColumn"></select></label>
+<label class="field"><span>Sample Entropy</span><select id="articleSampenColumn"></select></label>
+<label class="field"><span>Índice de modulação (%)</span><select id="articleModulationColumn"></select></label>
+<label class="field"><span>Tamanho da bolha · 3ª variável numérica</span><select id="articleBubbleSizeColumn"></select></label>
+</div>
+<div class="article-actions">
+<button class="button button-primary" id="analyzeArticleDataBtn" type="button">Gerar gráficos </button>
+<button class="button button-secondary" disabled="" id="downloadArticleCleanBtn" type="button">↓ Exportar dados válidos</button>
+</div>
+<p aria-live="polite" class="analysis-message" id="articleDataStatus">Confira o mapeamento antes de gerar as figuras.</p>
+</div>
+<p class="file-status" id="articleUploadEmpty">Nenhuma tabela individual carregada. Use o modelo CSV para organizar os dados quando estiverem disponíveis.</p>
+</article>
+<div class="hidden article-dynamic-results" id="articleDynamicResults">
+<div class="metric-grid data-metric-grid">
+<article class="metric-card"><span>Linhas lidas</span><strong id="articleMetricRows">—</strong><small>registros importados</small></article>
+<article class="metric-card"><span>SampEn válida</span><strong id="articleMetricSampen">—</strong><small>valores finitos</small></article>
+<article class="metric-card"><span>Par válido SampEn × modulação</span><strong id="articleMetricPairs">—</strong><small>SampEn &gt; 0 e modulação &gt; 0</small></article>
+<article class="metric-card"><span>Pearson</span><strong id="articleMetricPearson">—</strong><small>pares válidos, escala original</small></article>
+</div>
+<p class="chart-selection-note" id="articleChartSelectionNote" role="status">Os gráficos serão escolhidos conforme a quantidade e a variedade dos dados válidos.</p>
+<div class="chart-layout data-summary-charts">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">DISTRIBUIÇÃO</span><h3>Histograma global da Sample Entropy</h3></div></div><div class="chart-container"><canvas aria-label="Histograma gerado a partir da tabela importada" id="articleSampenHistogram" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Cada contagem representa registros individuais válidos da tabela importada. Com poucas observações ou poucos valores distintos, o gráfico é substituído pela tabela.</p></article>
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">RELAÇÃO ENTRE MÉTRICAS</span><h3>SampEn × índice de modulação</h3></div></div><div class="chart-container"><canvas aria-label="Dispersão de Sample Entropy versus índice de modulação" id="articleSampenModulationScatter" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="articleScatterNote">A dispersão exige ao menos 8 pares, variação nos dois eixos e fontes suficientes quando a coluna fonte está mapeada; a tabela preserva todos os registros.</p></article>
+</div>
+<details class="advanced-visualizations hidden" id="articleAdvancedVisuals">
+<summary><span>Análises complementares</span><small>Distribuição por classe, terceira variável e comparação entre classes</small></summary>
+<div class="advanced-chart-content">
+<p class="chart-selection-note" id="articleAdvancedStatus" role="status">Os gráficos complementares só aparecem quando a amostra permite uma visualização informativa.</p>
+<div class="chart-layout data-summary-charts">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">DISTRIBUIÇÕES SOBREPOSTAS</span><h3>Histograma da SampEn por classe</h3></div></div><div class="chart-container"><canvas aria-label="Histogramas sobrepostos de Sample Entropy por classe" id="articleSampenHistogramOverlay" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Só aparece com pelo menos 8 registros e 3 valores distintos por classe, usando intervalos compartilhados.</p></article>
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">VISUALIZAÇÃO MULTIVARIADA</span><h3>Bolhas: SampEn × modulação</h3></div></div><div class="chart-container"><canvas aria-label="Gráfico de bolhas da Sample Entropy versus índice de modulação" id="articleSampenModulationBubble" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="articleBubbleNote">Exibido apenas quando a terceira variável realmente acrescenta informação ao gráfico de dispersão.</p></article>
+</div>
+<article class="panel chart-panel hidden" id="articleClassComparisonPanel">
+<div class="chart-heading"><div><span class="chart-kicker">COMPARAÇÃO POR CLASSE</span><h3 id="articleClassComparisonTitle">Resumo por classe</h3></div><label class="field class-metric-select"><span>Métrica</span><select id="articleClassMetricSelect"><option value="sampen">Sample Entropy</option><option value="modulation">Índice de modulação</option></select></label></div>
+<div class="chart-container" id="articleClassComparisonChartWrap"><canvas aria-label="Comparação de métricas entre classes" id="articleClassComparison" role="img" tabindex="0"></canvas></div>
+<div class="table-wrap hidden" id="articleClassComparisonTableWrap"><table id="articleClassComparisonTable"><thead><tr><th>Classe</th><th>N</th><th>Média</th><th>DP</th></tr></thead><tbody></tbody></table></div>
+<p class="chart-footnote" id="articleClassComparisonNote">Com poucas classes, os valores são apresentados numa tabela em vez de um gráfico de duas colunas.</p>
+</article>
+</div>
+</details>
+<article class="panel article-data-table-panel"><div class="chart-heading"><div><span class="chart-kicker">TABELA DE AUDITORIA</span><h3>Registros usados nos gráficos</h3></div><span class="mini-label" id="articleValidRowsLabel">—</span></div><div class="table-wrap"><table id="articleDataTable"><thead><tr><th>Fonte</th><th>Classe</th><th>SampEn</th><th>Índice de modulação (%)</th></tr></thead><tbody><tr><td class="empty-cell" colspan="4">Importe uma tabela para começar.</td></tr></tbody></table></div><div class="table-pagination"><label class="field"><span>Linhas por página</span><select id="articleRowsPerPage"><option selected="" value="100">100</option><option value="250">250</option><option value="500">500</option><option value="all">Todas</option></select></label><div class="pagination-controls"><button class="button button-secondary" disabled="" id="articlePrevPage" type="button">← Anterior</button><span class="mini-label" id="articlePageLabel">0 registros</span><button class="button button-secondary" disabled="" id="articleNextPage" type="button">Próxima →</button></div></div><p class="chart-footnote">A paginação controla apenas a tabela visível; todos os registros válidos são utilizados nos gráficos e na exportação.</p></article>
+</div>
+</section>
+<section class="analysis-section batch-gallery-section" id="batchGallery">
+<div class="section-title-row">
+<div><div class="eyebrow"><span>05 / GALERIA MULTIFONTE</span></div><h2>Todos os estilos, <em>seus dados.</em></h2><p>Importe os CSVs exportados pelo Python para gerar sobreposições, perfis por banda, heatmaps, dispersões e bolhas.</p></div>
+<div class="export-actions"><button class="button button-secondary" id="downloadBatchTemplateBtn" type="button">↓ Modelo multifonte</button></div>
+</div>
+<div class="method-note data-method-note"><div class="method-icon">i</div><div><strong>Como alimentar a galeria</strong><p>Você pode importar uma tabela de resultados de SampEn (fonte × janela × banda) ou uma tabela de curvas brutas em formato longo (fonte × tempo × banda × fluxo). Para dados fonte × janela × banda, o site resume janelas antes de construir o heatmap e o perfil por banda. Gráficos com todas as janelas são descritivos e não devem tratar janelas da mesma fonte como fontes independentes.</p></div></div>
+<section aria-labelledby="batchTopBridgeHeading" class="batch-top-bridge">
+<div class="batch-top-bridge-copy"><span class="chart-kicker">ATALHO DE INTEGRAÇÃO</span><h3 id="batchTopBridgeHeading">Usar os dados do laboratório principal</h3><p>Envie a curva carregada para visualizar tempo × fluxo, ou incorpore também as métricas já calculadas. O modo combinado mantém tempo e fluxo sem repetir SampEn em todas as observações.</p></div>
+<div class="batch-top-bridge-actions"><button class="button button-secondary" disabled="" id="useLoadedCurveBatchTopBtn" type="button">Incorporar curva carregada</button><button class="button button-primary" disabled="" id="useMainCombinedBatchTopBtn" type="button">Incorporar curva + métricas</button><button class="button button-secondary" disabled="" id="downloadMainCombinedBatchCsvTopBtn" type="button">Baixar CSV combinado</button></div>
+<p aria-live="polite" class="microcopy" id="batchTopBridgeStatus" role="status">Carregue uma curva na etapa 01. O botão combinado fica disponível depois que a análise principal for calculada.</p>
+</section>
+<article class="panel article-upload-panel">
+<div class="panel-heading"><div><span class="step">05A</span><h2>Importar resultados Python</h2></div><span class="mini-label">CSV / TSV</span></div>
+<div class="article-template-row"><div><strong>Formato sugerido</strong><code>fonte,janela,banda,tempo,fluxo,sampen,classe_fonte,variabilidade_robusta,modulation_index_percent,n_pontos</code><p class="microcopy">Os campos de classe, variabilidade, modulação e tamanho da bolha são opcionais. σ, r absoluto e número de pontos alimentam as dicas do gráfico quando disponíveis. O site não calcula modulação intrínseca se a tabela não a contiver.</p></div><label class="button button-primary file-pick-button" for="batchDataFile">Selecionar CSV/TSV</label><input accept=".csv,.tsv,.txt,text/csv,text/plain" hidden="" id="batchDataFile" type="file"/></div>
+<div class="batch-demo-actions"><button class="button button-secondary" id="batchLoadDemoBtn" type="button">✦ Carregar demonstração multifonte</button><button class="button button-secondary" id="batchDownloadDemoBtn" type="button">↓ Baixar CSV demonstrativo</button><p class="microcopy">Dados sintéticos determinísticos: 9 fontes × 8 bandas × 8 janelas. Servem para testar os gráficos, não representam observações astronômicas reais.</p></div>
+<section aria-labelledby="batchCurrentBridgeTitle" class="batch-current-bridge">
+<div><span class="chart-kicker">INTEGRAÇÃO COM A ANÁLISE PRINCIPAL</span><h3 id="batchCurrentBridgeTitle">Usar os dados que você acabou de analisar</h3><p class="microcopy">Não precisa montar um CSV manualmente. Você pode abrir os dados atuais diretamente nesta galeria ou baixar arquivos compatíveis com o formato esperado.</p></div>
+<div class="batch-current-bridge-grid">
+<article><strong>Curvas brutas</strong><p class="microcopy">Tempo, fluxo e banda em formato longo. Melhor para curvas sobrepostas; pode ser usado antes de calcular SampEn.</p><div class="batch-bridge-actions"><button class="button button-primary" disabled="" id="useMainRawBatchBtn" type="button">Carregar curva aqui</button><button class="button button-secondary" disabled="" id="downloadMainRawBatchCsvBtn" type="button">Baixar CSV</button></div></article>
+<article><strong>Resultados por banda</strong><p class="microcopy">SampEn e modulação, sem tempo/fluxo. Use “curva + métricas” acima se quiser ambas as famílias de gráficos na mesma galeria.</p><div class="batch-bridge-actions"><button class="button button-primary" disabled="" id="useMainMetricsBatchBtn" type="button">Carregar métricas aqui</button><button class="button button-secondary" disabled="" id="downloadMainMetricsBatchCsvBtn" type="button">Baixar CSV</button></div></article>
+</div>
+<p aria-live="polite" class="analysis-message" id="mainBatchBridgeStatus" role="status">Carregue e calcule uma curva no laboratório principal para habilitar os atalhos. As exportações da demonstração são identificadas como sintéticas.</p>
+</section>
+<div class="hidden article-mapping-panel" id="batchMappingPanel">
+<div class="subsection-title"><span>Mapeamento dos dados</span><span class="hint" id="batchFileLabel">—</span></div>
+<div class="form-grid article-mapping-grid">
+<label class="field"><span>Fonte / objeto</span><select id="batchSourceColumn"></select></label>
+<label class="field"><span>Classe</span><select id="batchClassColumn"></select></label>
+<label class="field"><span>Janela / índice temporal</span><select id="batchWindowColumn"></select></label>
+<label class="field"><span>Banda</span><select id="batchBandColumn"></select></label>
+<label class="field"><span>Tempo da curva bruta</span><select id="batchTimeColumn"></select></label>
+<label class="field"><span>Fluxo / RATE da curva bruta</span><select id="batchFluxColumn"></select></label>
+<label class="field"><span>Sample Entropy</span><select id="batchSampenColumn"></select></label>
+<label class="field"><span>Variabilidade robusta (X)</span><select id="batchVariabilityColumn"></select></label>
+<label class="field"><span>Índice de modulação (%)</span><select id="batchModulationColumn"></select></label>
+<label class="field"><span>Tamanho da bolha (3ª variável)</span><select id="batchBubbleSizeColumn"></select></label>
+<label class="field"><span>σ usado no cálculo (opcional)</span><select id="batchSigmaColumn"></select></label>
+<label class="field"><span>r absoluto (opcional)</span><select id="batchRAbsoluteColumn"></select></label>
+<label class="field"><span>N de pontos por janela (opcional)</span><select id="batchNPointsColumn"></select></label>
+</div>
+<details class="generic-column-preview">
+<summary>CSV genérico — desenhar duas colunas numéricas</summary>
+<p class="microcopy">Use esta alternativa quando o arquivo não tiver cabeçalhos reconhecidos de SampEn ou tempo/fluxo. O gráfico é exploratório: não interpreta automaticamente unidades nem representa SampEn a menos que selecione essa coluna.</p>
+<div class="form-grid article-mapping-grid">
+<label class="field"><span>Eixo X (coluna numérica)</span><select id="batchGenericXColumn"></select></label>
+<label class="field"><span>Eixo Y (coluna numérica)</span><select id="batchGenericYColumn"></select></label>
+</div>
+<div class="article-actions generic-chart-actions"><button class="button button-primary" disabled="" id="drawGenericScatterBtn" type="button">Desenhar gráfico X × Y</button></div>
+<p class="microcopy">Depois de selecionar X e Y, use este botão para desenhar diretamente a prévia. Se houver colunas de SampEn/tempo/fluxo, elas não impedirão o gráfico manual.</p>
+</details>
+<div class="form-grid article-mapping-grid batch-options-grid">
+<label class="field"><span>Unidade do histograma</span><select id="batchDistributionMode"><option value="records">Cada registro importado</option><option selected="" value="source">Média por fonte (recomendado)</option></select></label>
+<label class="field"><span>Fonte para evolução temporal</span><select id="batchTemporalSource"><option value="">Detectar após importar</option></select></label>
+</div>
+<div class="article-actions"><button class="button button-primary" id="buildBatchGalleryBtn" type="button">Gerar galeria completa </button><button class="button button-secondary" disabled="" id="downloadBatchCleanBtn" type="button">↓ Exportar registros válidos</button></div>
+<p aria-live="polite" class="analysis-message" id="batchDataStatus">Mapeie a coluna SampEn e os campos opcionais antes de gerar os gráficos.</p>
+</div>
+<p class="file-status" id="batchUploadEmpty">Nenhuma tabela multifonte carregada.</p>
+</article>
+<div class="hidden article-dynamic-results" id="batchGalleryResults">
+<div class="metric-grid data-metric-grid"><article class="metric-card"><span>Registros lidos</span><strong id="batchMetricRows">—</strong><small id="batchMetricRowsHint">linhas válidas importadas</small></article><article class="metric-card"><span>Fontes</span><strong id="batchMetricSources">—</strong><small>identificadores únicos</small></article><article class="metric-card"><span>Bandas</span><strong id="batchMetricBands">—</strong><small>rótulos distintos</small></article><article class="metric-card"><span>Pares SampEn × variável</span><strong id="batchMetricPairs">—</strong><small>para dispersão de variabilidade</small></article></div>
+<p class="chart-selection-note" id="batchChartSelectionNote" role="status">A galeria mostrará apenas gráficos adequados à amostra e às colunas mapeadas.</p>
+<div class="chart-layout data-summary-charts">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">DISTRIBUIÇÃO</span><h3>Histograma global da SampEn</h3></div></div><div class="chart-container"><canvas aria-label="Histograma global da Sample Entropy" id="batchGlobalHistogram" role="img" tabindex="0"></canvas></div><p class="chart-footnote">Só aparece quando há observações e valores distintos suficientes para uma distribuição interpretável.</p></article>
+<article class="panel chart-panel" id="batchBandProfilePanel"><div class="chart-heading"><div><span class="chart-kicker">PERFIL MULTIBANDA</span><h3>SampEn média por banda</h3></div></div><div class="chart-container"><canvas aria-label="Perfil da média de Sample Entropy por banda" id="batchBandProfile" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchBandProfileNote">Cada fonte é resumida por banda antes do cálculo da média geral e do desvio-padrão entre fontes.</p></article>
+</div>
+<article class="panel chart-panel batch-heatmap-panel"><div class="chart-heading"><div><span class="chart-kicker">MATRIZ FONTE × BANDA</span><h3>Heatmap da SampEn</h3></div><span class="mini-label" id="batchHeatmapRange">—</span></div><div aria-label="Controles de zoom do heatmap" class="heatmap-zoom-toolbar"><button class="chart-tool-button" id="batchHeatmapZoomOut" title="Reduzir heatmap" type="button">−</button><button class="chart-tool-button" id="batchHeatmapZoomIn" title="Ampliar heatmap" type="button">+</button><button class="chart-tool-button chart-tool-reset" id="batchHeatmapZoomReset" title="Restaurar tamanho do heatmap" type="button">Reset</button><span class="chart-zoom-hint" id="batchHeatmapZoomValue">100%</span></div><div aria-label="Heatmap da média de Sample Entropy por fonte e banda" class="batch-heatmap-wrap" id="batchHeatmap"></div><p class="chart-footnote">Cada célula é a média das janelas disponíveis para aquela fonte e banda. Células ausentes permanecem vazias; matrizes muito grandes são omitidas para preservar o desempenho.</p></article>
+<details class="advanced-visualizations" id="batchAdvancedVisuals">
+<summary><span>Exploração avançada</span><small>Comparações, correlações, bolhas e séries temporais</small></summary>
+<div class="advanced-chart-content">
+<article class="panel chart-panel" id="batchSampenByRecordPanel"><div class="chart-heading"><div><span class="chart-kicker">VISTA DE CONTINGÊNCIA</span><h3>Sample Entropy por registro</h3></div><span class="mini-label">TODOS OS TAMANHOS DE AMOSTRA</span></div><div class="chart-container"><canvas aria-label="Sample Entropy individual por registro importado" id="batchSampenByRecordChart" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchSampenByRecordNote">Quando a amostra é pequena demais para histogramas ou comparações, os valores individuais continuam visíveis aqui.</p></article>
+<article class="panel chart-panel batch-raw-overlay-panel">
+<div class="chart-heading"><div><span class="chart-kicker">SOBREPOSIÇÃO ENTRE FONTES</span><h3>Curvas de luz de duas fontes na mesma banda</h3></div></div>
+<p class="microcopy">Exige linhas ponto a ponto com fonte, banda, tempo e fluxo/RATE. Pode ser um CSV separado dos resultados de SampEn.</p>
+<div class="form-grid batch-options-grid"><label class="field"><span>Banda</span><select id="batchRawBand"><option value="">Mapeie a banda</option></select></label><label class="field"><span>Fonte A</span><select id="batchRawSourceA"><option value="">Mapeie a fonte</option></select></label><label class="field"><span>Fonte B (opcional)</span><select id="batchRawSourceB"><option value="">Não sobrepor segunda fonte</option></select></label></div>
+<div class="article-actions"><button class="button button-secondary" id="drawRawOverlayBtn" type="button">Desenhar curvas sobrepostas</button></div>
+<p aria-live="polite" class="analysis-message" id="batchRawOverlayNote">A sobreposição bruta ficará disponível quando as colunas fonte, banda, tempo e fluxo estiverem mapeadas.</p>
+<div class="chart-container"><canvas aria-label="Sobreposição de curvas de luz brutas de duas fontes para uma banda" id="batchLightcurveSourceOverlay" role="img" tabindex="0"></canvas></div>
+</article>
+<article class="panel chart-panel" id="batchGenericScatterPanel">
+<div class="chart-heading"><div><span class="chart-kicker">PRÉVIA GENÉRICA DO CSV</span><h3 id="batchGenericScatterTitle">Relação entre duas colunas</h3></div><span class="mini-label">EXPLORATÓRIO</span></div>
+<div class="chart-container"><canvas aria-label="Dispersão exploratória de duas colunas numéricas do CSV" id="batchGenericScatterChart" role="img" tabindex="0"></canvas></div>
+<p class="chart-footnote" id="batchGenericScatterNote">Se as colunas científicas não forem reconhecidas, selecione duas colunas numéricas no mapeamento genérico.</p>
+</article>
+<div class="chart-layout data-summary-charts">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">DISTRIBUIÇÃO NORMALIZADA</span><h3>Distribuição da Sample Entropy por classe</h3></div></div><div class="chart-container"><canvas aria-label="Histogramas de densidade normalizada da Sample Entropy por classe, com médias e medianas" id="batchClassHistogram" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchClassHistogramNote">Bordas compartilhadas entre classes; área de cada distribuição normalizada para 1. Linhas tracejadas = média; linhas pontilhadas = mediana.</p></article>
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">COMPARAÇÃO ENTRE FONTES</span><h3>SampEn média por fonte</h3></div></div><div class="chart-container"><canvas aria-label="Comparação de Sample Entropy por fonte" id="batchSourceRanking" role="img" tabindex="0"></canvas></div><p class="chart-footnote">O ranking só aparece com 5–40 fontes e variação entre médias; catálogos maiores ficam na tabela/exportação.</p></article>
+</div>
+<div class="chart-layout data-summary-charts">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">RELAÇÃO ENTRE MÉTRICAS</span><h3>SampEn × variabilidade robusta</h3></div></div><div class="chart-container"><canvas aria-label="Dispersão de Sample Entropy contra variabilidade robusta" id="batchSampenVariability" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchVariabilityNote">A dispersão requer pares suficientes e variação nos dois eixos.</p></article>
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">RELAÇÃO ENTRE MÉTRICAS</span><h3>SampEn × índice de modulação</h3></div></div><div class="chart-container"><canvas aria-label="Dispersão de Sample Entropy contra índice de modulação intrínseco" id="batchSampenModulation" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchModulationNote">Usa a coluna real de modulação; não substitui valores ausentes pelo parâmetro da SampEn.</p></article>
+</div>
+<div class="chart-layout data-summary-charts">
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">TERCEIRA DIMENSÃO</span><h3>Gráfico de bolhas</h3></div></div><div class="chart-container"><canvas aria-label="Gráfico de bolhas SampEn e variabilidade" id="batchBubblePlot" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchBubbleNote">A terceira variável precisa variar de forma útil e ter dados válidos suficientes.</p></article>
+<article class="panel chart-panel"><div class="chart-heading"><div><span class="chart-kicker">EVOLUÇÃO TEMPORAL</span><h3>SampEn por janela — bandas sobrepostas</h3></div></div><div class="chart-container"><canvas aria-label="Evolução da SampEn por janela com bandas sobrepostas para uma fonte selecionada" id="batchTemporalOverlay" role="img" tabindex="0"></canvas></div><p class="chart-footnote" id="batchTemporalNote">Exige pelo menos quatro janelas e duas bandas para uma série temporal útil.</p></article>
+</div>
+<article class="panel chart-panel batch-temporal-grid-panel" id="batchTemporalGridPanel">
+<div class="chart-heading"><div><span class="chart-kicker">PAINEL MULTIFONTE · 3 × 3</span><h3>Evolução temporal da Sample Entropy — oito bandas por fonte</h3></div><span class="mini-label" id="batchTemporalGridCount">—</span></div>
+<div class="coincidence-control-row">
+<label class="field coincidence-tolerance-field"><span>Tolerância de coincidência (Δ SampEn)</span><input aria-describedby="batchCoincidenceHelp" id="batchCoincidenceTolerance" inputmode="decimal" max="10" min="0.000001" step="0.0001" type="number" value="0.001"/></label>
+<p class="microcopy" id="batchCoincidenceHelp">O diamante representa a média do grupo de bandas que ficou dentro dessa diferença absoluta.</p>
+</div>
+<div aria-label="Legenda compartilhada das bandas" class="batch-temporal-legend" id="batchTemporalLegend"></div>
+<div aria-label="Painel de evolução temporal de até nove fontes" class="batch-temporal-grid" id="batchTemporalGrid"></div>
+<p aria-live="polite" class="chart-footnote" id="batchTemporalGridNote">O painel compartilha a escala vertical entre fontes. Diamantes indicam a média de coincidências entre pelo menos duas bandas na mesma janela, com Δ SampEn ≤ 0,001.</p>
+</article>
+</div>
+</details>
+<article class="panel article-data-table-panel"><div class="chart-heading"><div><span class="chart-kicker">AUDITORIA</span><h3>Registros importados</h3></div><span class="mini-label" id="batchValidRowsLabel">—</span></div><div class="table-wrap"><table id="batchDataTable"><thead><tr><th>Fonte</th><th>Janela</th><th>Banda</th><th>Classe</th><th>Tempo</th><th>Fluxo</th><th>SampEn</th><th>Variabilidade</th><th>Modulação (%)</th><th>3ª variável</th></tr></thead><tbody><tr><td class="empty-cell" colspan="10">Importe um CSV/TSV para começar.</td></tr></tbody></table></div><div class="table-pagination"><label class="field"><span>Linhas por página</span><select id="batchRowsPerPage"><option selected="" value="100">100</option><option value="250">250</option><option value="500">500</option><option value="all">Todas</option></select></label><div class="pagination-controls"><button class="button button-secondary" disabled="" id="batchPrevPage" type="button">← Anterior</button><span class="mini-label" id="batchPageLabel">0 registros</span><button class="button button-secondary" disabled="" id="batchNextPage" type="button">Próxima →</button></div></div><p class="chart-footnote">A paginação controla apenas a tabela visível; todos os registros válidos são utilizados nos gráficos e na exportação.</p></article>
+</div>
+</section>
+</div>
+</details>
+
+<div class="mobile-calculate-dock hidden" id="mobileCalculateDock"><button class="button button-primary" disabled="" id="mobileAnalyzeBtn" type="button">Calcular SampEn + modulação</button><span aria-live="polite" id="mobileCalculateStatus">Carregue os dados primeiro.</span></div><button aria-label="Voltar ao topo" class="back-to-top" id="backToTopBtn" type="button">↑ Topo</button></div></div>
