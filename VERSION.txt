@@ -1,0 +1,4 @@
+BlazarLab Privado · 13.03 Lite — validação integrada (23/10/2026)
+Base: BlazarLab Privado 13.02 Lite UI-Refinada.
+Escopo: alinhamento cromático das oito bandas, ícone de informação, gráficos avançados dos quatro pilares (Sample Entropy, Fisher–Shannon, modulação intrínseca e MSE-WPE/CI), validação numérica fundamental para Sample Entropy, Fisher–Shannon, modulação intrínseca e MSE-WPE/CI.
+Projeto privado/experimental; não publicar no repositório público da vitrine. A comparação numérica externa com EntropyHub, a calibração de cobertura dos intervalos da modulação e a homologação externa de KDE Fisher–Shannon e WPE/CI permanecem pendentes. Resultados sintéticos não substituem validação com dados científicos reais.
