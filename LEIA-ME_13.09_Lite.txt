@@ -1,0 +1,69 @@
+BlazarLab Privado 13.09 Lite
+
+Integração automática entre análise principal e galeria avançada.
+
+## O que há de novo
+
+- No modo avançado, o botão “Calcular se necessário + integrar os quatro métodos” usa os dados carregados no laboratório principal diretamente da memória desta sessão.
+- Se não houver uma análise atual — por exemplo, após carregar dados ou mudar o mapeamento/parâmetros — o botão executa os quatro métodos antes de preencher a galeria.
+- Não é necessário baixar e reimportar um CSV para continuar a análise. As curvas brutas, os resumos por banda e os valores WPE por escala são encaminhados diretamente para a galeria.
+- O botão “Calcular e baixar CSV completo” executa a análise, se necessário, e baixa um arquivo compatível com a galeria avançada.
+- O CSV mantém as dez colunas-base: `fonte,janela,banda,tempo,fluxo,sampen,classe_fonte,variabilidade_robusta,modulation_index_percent,n_pontos`. Depois delas, acrescenta campos de Fisher–Shannon, CI, WPE por escala, incerteza do fluxo e estados/limites da modulação.
+- SampEn, variabilidade, modulação, Fisher–Shannon e CI são resumos por banda registrados uma vez. WPE é exportada em linhas próprias por banda e escala, usando `janela` como índice da escala; isso permite que a galeria represente corretamente WPE × escala sem duplicar o mesmo valor em cada observação bruta.
+- Campos não estimáveis ficam vazios; estados e limites da modulação são registrados separadamente. Um limite superior candidato não é exportado como uma detecção.
+- Alterações de mapeamento, dimensão de imersão ou tolerância invalidam resultados anteriores; a integração/exportação automática recalcula em vez de reutilizar resultados obsoletos.
+
+## Fluxo recomendado
+
+1. Carregue os dados observacionais no Laboratório principal.
+2. Confira tempo, fluxos, incertezas e mapeamento de bandas.
+3. Vá ao modo avançado e clique em “Calcular se necessário + integrar os quatro métodos”. O sistema calcula se necessário e encaminha os resultados diretamente.
+4. Baixe o CSV completo apenas quando precisar arquivar, transportar ou reutilizar resultados em outra sessão/dispositivo.
+
+O laboratório processa dados localmente no navegador. A integração direta existe apenas na memória da sessão atual; recarregar a página apaga esse estado. O CSV completo é o meio de levar os resultados para outra sessão.
+
+## Estrutura do CSV completo
+
+O cabeçalho completo contém, nesta ordem, as dez colunas-base seguidas pelos campos calculados:
+
+`fonte,janela,banda,tempo,fluxo,sampen,classe_fonte,variabilidade_robusta,modulation_index_percent,n_pontos,sigma,r_absoluto,H_X_nats_KDE_experimental,entropy_power_NX_KDE_experimental,Fisher_information_KDE_experimental,Fisher_Shannon_product_experimental,WPE_nats,CI_WPE_sum_nats_experimental,WPE_valid_scales,WPE_escala,tipo_registro,status_modulacao,limite_superior_modulacao_percent,modulacao_ic68_inferior_percent,modulacao_ic68_superior_percent,erro_fluxo`.
+
+O cabeçalho contém 26 campos. Campos experimentais permanecem explicitamente nomeados como tais. Os campos adicionais são `sigma`, `r_absoluto`, `H_X_nats_KDE_experimental`, `entropy_power_NX_KDE_experimental`, `Fisher_information_KDE_experimental`, `Fisher_Shannon_product_experimental`, `WPE_nats`, `CI_WPE_sum_nats_experimental`, `WPE_valid_scales`, `WPE_escala`, `tipo_registro`, `status_modulacao`, `limite_superior_modulacao_percent`, `modulacao_ic68_inferior_percent`, `modulacao_ic68_superior_percent` e `erro_fluxo`.
+
+Cada observação bruta conserva tempo e fluxo. A linha-resumo daquela banda contém os resultados de métodos calculados para a série inteira. Para WPE, cada escala gera uma linha `tipo_registro=escala_wpe`, com a escala em `janela` e o valor WPE. O CI permanece um resumo experimental por banda e não é tratado como se fosse um valor por escala.
+
+## Importação multifonte e NumPy
+
+A 13.09 preserva a ingestão local da versão anterior: vários arquivos podem ser selecionados ou acrescentados; pastas podem ser anexadas em navegadores com suporte a `webkitdirectory`; e bibliotecas ZIP podem conter CSV, TSV, TXT delimitado, NPY e NPZ. Tabelas são combinadas por nome de coluna e cada linha mantém `fonte` e `arquivo_importado_de`. Valores ausentes ficam vazios; não há interpolação, imputação nem fusão silenciosa de observações duplicadas.
+
+- `.npy`: arrays escalares, vetores e matrizes numéricas/booleanas/de texto até 2D, além de arrays estruturados simples com campos suportados.
+- `.npz`: arrays nomeados; arrays não escalares precisam ter comprimentos compatíveis. Metadados escalares como `fonte`, `source`, `classe`, `class`, `banda`, `band`, `janela` e `window` podem ser propagados.
+- `dtype=object`/pickle, ZIP64, ZIP criptografado, arrays com mais de duas dimensões e dtypes de data/hora NumPy não são importados automaticamente. A leitura fica local no navegador.
+
+Exemplo de preparação em Python:
+
+```python
+import numpy as np
+
+np.savez_compressed(
+    "curva_SWIFT.npz",
+    fonte=np.array(["SWIFT exemplo"] * len(tempo)),
+    tempo=np.asarray(tempo, dtype=np.float64),
+    fluxo=np.asarray(fluxo, dtype=np.float64),
+    sigma=np.asarray(incerteza, dtype=np.float64),
+)
+```
+
+Garanta que os arrays alinhados tenham o mesmo comprimento. Um vetor `.npy` sem coluna temporal reconhecida recebe `indice_observacao`, que é um índice de linha e não representa tempo físico.
+
+## Limitações científicas preservadas
+
+- Fisher–Shannon por KDE continua experimental e sensível ao estimador/largura de banda.
+- O CI permanece provisório porque a definição original do projeto ainda precisa de homologação independente.
+- Limites e intervalos da modulação são candidatos nominais até a calibração de cobertura.
+- Dados ausentes, escalas não estimáveis e incertezas inválidas não são convertidos silenciosamente em zero.
+- Um CSV externo não pode gerar resultados ausentes sem a série bruta adequada e os parâmetros necessários; use o laboratório principal para recalcular.
+
+## Testes
+
+Execute os testes do pacote Kit de validação com Node.js. Os testes cobrem a estrutura CSV completa, métricas não duplicadas, WPE em linhas por escala, atualização dos quatro métodos e preservação dos limites/estados de validade.
