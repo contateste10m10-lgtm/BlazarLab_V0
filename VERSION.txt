@@ -1,2 +1,0 @@
-BlazarLab Privado 13.09 Lite
-Integração automática de dados e resultados dos quatro métodos no modo avançado; CSV completo exportável com WPE por escala e estado de validade.
