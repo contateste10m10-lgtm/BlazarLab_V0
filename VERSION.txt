@@ -1,4 +1,0 @@
-BlazarLab Privado · 13.04 Lite — estimadores, inferência e estabilidade numérica (23/10/2026)
-Base: BlazarLab Privado 13.03 Lite — validação integrada.
-Escopo: seletor de método na galeria multifonte; metadados KDE e perfil de verossimilhança; testes analíticos e de sensibilidade Fisher–Shannon; validação de modulação intrínseca por MLE; regressões de Sample Entropy e MSE-WPE/CI.
-Projeto privado/experimental; não publicar no repositório público da vitrine. Comparação externa com EntropyHub, calibração empírica da cobertura dos intervalos da modulação e homologação externa da KDE/WPE/CI permanecem pendentes.
