@@ -1,0 +1,56 @@
+BlazarLab Privado 13.08 Lite
+
+Biblioteca multifonte local + importação NumPy.
+
+## O que há de novo
+
+- Adicione vários arquivos em uma seleção e também acrescente arquivos depois, sem substituir os anteriores.
+- Anexe uma pasta local (navegadores que suportam `webkitdirectory`) ou um ZIP com uma biblioteca de dados.
+- Formatos da galeria: CSV, TSV, TXT delimitado, NumPy `.npy`, NumPy `.npz` e ZIP contendo arquivos compatíveis.
+- Os esquemas das tabelas são unidos por nome de coluna. Colunas ausentes ficam vazias; linhas não são interpoladas nem preenchidas.
+- A coluna `fonte` existente é preservada. Se faltar ou estiver vazia, recebe o nome de origem/arquivo como identificador de fallback.
+- Cada linha recebe `arquivo_importado_de` para registrar o arquivo que a originou, além da lista de proveniência exibida na interface.
+- O campo `n_pontos` continua como metadado de tamanho de amostra, não como tamanho de bolha automático.
+- Esquema da curva preparada para a galeria: `fonte, janela, banda, tempo, fluxo, sampen, classe_fonte, variabilidade_robusta, modulation_index_percent, n_pontos`. Campos de métricas não calculadas permanecem vazios; `sampen` é o nome canônico exportado.
+
+## NumPy aceito
+
+- `.npy`: arrays escalares, vetores e matrizes 2D numéricas/booleanas/de texto, além de arrays estruturados simples com campos numéricos/de texto.
+- `.npz`: arquivos ZIP NumPy com arrays nomeados; arrays não escalares precisam ter o mesmo número de linhas. Campos escalares de metadados (`fonte`, `source`, `classe`, `class`, `banda`, `band`, `janela`, `window`) podem ser propagados pelas linhas.
+- Para vetores `.npy` isolados, a interface adiciona `indice_observacao` como eixo exploratório quando não há coluna temporal reconhecida. Isso **não** é tempo físico.
+- Para manter arrays alinhados por coluna (por exemplo, `tempo`, `fluxo`, `incerteza`, `banda`), salve-os juntos em `.npz`. Arquivos `.npy` escolhidos separadamente são tratados como entradas separadas, não alinhados por suposição.
+- `dtype=object`/pickle, ZIP64, ZIPs criptografados, matrizes NumPy com mais de 2 dimensões e dtypes de data/hora com unidade embutida não são aceitos automaticamente. Exporte esses casos explicitamente para arrays numéricos com unidades conhecidas ou CSV.
+- Os `.npz` podem usar compressão ZIP STORE ou DEFLATE. O leitor usa a dependência local pako, sem upload ou serviço externo.
+
+Exemplo Python para alinhar arrays num `.npz`:
+
+```python
+import numpy as np
+
+np.savez_compressed(
+    "curva_SWIFT_J0010.npz",
+    fonte=np.array(["SWIFT J0010.5+1057"] * len(tempo)),
+    tempo=np.asarray(tempo, dtype=np.float64),
+    fluxo=np.asarray(fluxo, dtype=np.float64),
+    sigma=np.asarray(incerteza, dtype=np.float64),
+    banda=np.asarray(banda),
+)
+```
+
+Confirme que `tempo`, `fluxo`, `sigma` e `banda` têm o mesmo comprimento antes de salvar. O laboratório não converte unidades, não preenche lacunas e não calcula métricas que não estejam presentes no arquivo importado.
+
+## Carregar a aplicação
+
+Extraia o ZIP e sirva a pasta por um servidor estático (não use `file://`):
+
+```bash
+python -m http.server 8000
+```
+
+Abra `http://localhost:8000/`.
+
+## Privacidade e limitações
+
+Todos os arquivos são processados no navegador. Anexar uma pasta exige que o navegador suporte seleção de diretório; a alternativa é selecionar múltiplos arquivos ou um ZIP local. Em uma biblioteca com diferentes esquemas, os campos são unidos por nome e os valores ausentes continuam vazios. Revise o mapeamento no painel antes de gerar os gráficos.
+
+A 13.08 adiciona ingestão e proveniência de dados, não uma nova homologação dos algoritmos científicos. Fisher–Shannon KDE e MSE-WPE/CI continuam experimentais onde indicado; o CI permanece provisório. Arquivos observacionais reais não devem ser incluídos no pacote Lite nem enviados a repositórios públicos.
