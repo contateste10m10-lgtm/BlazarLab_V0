@@ -1,0 +1,26 @@
+BlazarLab Privado 13.07 Lite
+
+Atualização sobre a 13.06: o botão “Baixar CSV inicial” exporta a curva longa com exatamente dez colunas, na ordem:
+fonte,janela,banda,tempo,fluxo,sampen,classe_fonte,variabilidade_robusta,modulation_index_percent,n_pontos
+
+O arquivo é compatível com a galeria multifonte (Modos avançados → Importar resultados Python → Selecionar CSV/TSV). O mapeamento automático reconhece os dez nomes; n_pontos é destinado a metadados do número de pontos e não é consumido como tamanho da bolha.
+
+Estrutura do CSV inicial:
+- Cada linha representa um par válido tempo × fluxo de uma banda selecionada.
+- `janela` fica vazia porque essa exportação representa a curva inteira e não uma janela temporal segmentada.
+- `fonte` e `classe_fonte` identificam a curva; classe de dados reais não é inferida e fica “Não classificada”. Dados sintéticos são rotulados “SINTÉTICO”.
+- `variabilidade_robusta` (em %) é calculada por banda como 100 × 1,4826 × MAD / |mediana|, caso seja definida.
+- `sampen`, `modulation_index_percent` e `n_pontos` (resumo) são gravados somente na primeira linha válida da banda. Isso impede que uma métrica por banda seja repetida em milhares de observações e distorça os histogramas/dispersões do modo avançado.
+- SampEn e modulação ficam vazias se a análise principal ainda não tiver sido executada, ou se o método não produzir uma estimativa numérica. Limites superiores de modulação não são convertidos em deteções numéricas.
+- Linhas sem tempo ou fluxo numéricos finitos não entram no CSV de curva; a quantidade descartada é informada no status. Não há interpolação, preenchimento de lacunas ou fusão de tempos repetidos.
+- Este modelo de dez colunas não inclui a incerteza por observação. Preserve o arquivo original para reproduzir a inferência de modulação intrínseca; o CSV inicial é uma exportação para a galeria avançada, não um arquivo bruto completo.
+- O exportador escreve em lotes para reduzir o pico de memória em arquivos com dezenas de milhares de linhas e múltiplas bandas.
+
+Usar o pacote: extraia o ZIP e abra em servidor estático local (não abrir por file://):
+  python -m http.server 8000
+Depois abra http://localhost:8000/
+
+A versão preserva as rotinas de qualidade dos dados, proveniência e os quatro pilares científicos da 13.06. Fisher–Shannon KDE e MSE-WPE/CI permanecem experimentais onde indicado; esta versão melhora o contrato de exportação, não declara uma homologação científica nova.
+Consulte o kit de validação e o relatório de auditoria distribuídos separadamente.
+
+Não publique este pacote na vitrine pública do BlazarLab. Arquivos observacionais reais não devem ser incluídos no pacote Lite.

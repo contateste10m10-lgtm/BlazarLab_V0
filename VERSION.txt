@@ -1,0 +1,2 @@
+BlazarLab Privado 13.07 Lite
+CSV inicial com esquema de 10 colunas compatível com a galeria multifonte avançada.
