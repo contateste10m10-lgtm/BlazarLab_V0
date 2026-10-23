@@ -1,0 +1,21 @@
+BlazarLab Privado 13.06 Lite
+
+Atualização de qualidade dos dados, cadência temporal e proveniência, construída sobre a 13.05. Mantém o aplicativo local e separa dados originais em memória, tabela interpretada, máscaras de elegibilidade por método e manifesto de análise.
+
+Executar em servidor estático local (não abrir por file://):
+  python -m http.server 8000
+Depois abra http://localhost:8000/
+
+O painel Qualidade dos dados aparece depois do carregamento e do mapeamento. Exibe N bruto, N tempo+fluxo válidos por banda, candidatos de elegibilidade por método, pares com incerteza válida para modulação, contagem de vetores WPE na escala máxima, cadência mediana, MAD, maior lacuna, duplicatas, fluxos negativos e alertas. O multiplicador de lacunas é configurável entre 1,5× e 10× a mediana dos intervalos positivos únicos. O alerta é heurístico; não prova que deveria existir uma observação.
+
+Os registros importados não são reordenados ou modificados no estado original. Diagnósticos cronológicos ordenam cópias. Não há interpolação, fusão automática de duplicatas ou conversão de unidades presumida. Fluxos negativos são sinalizados e preservados. Métodos que usam fluxo requerem tempo e fluxo finitos; modulação intrínseca requer ainda pares de fluxo e incerteza finitos e não negativos. Os valores de elegibilidade são candidatos: o próprio cálculo ainda pode retornar não estimável.
+
+FITS: o leitor procura tabelas BINTABLE compatíveis, dentro das primeiras 30 HDUs. Reconhece colunas multibanda vetoriais e várias colunas escalares de fluxo. Campos de texto de largura fixa continuam sendo uma só coluna. Lê nomes, formatos e TUNIT, registra metadados temporais globais/por coluna e aplica TSCALn/TZEROn a colunas numéricas e TNULLn a campos inteiros quando presentes. Valores de tempo FITS numéricos continuam no sistema/unidade de origem; TIMESYS, MJDREF/JDREF, TIMEUNIT e outros metadados são registrados, não convertidos automaticamente para outra escala/referência. Não há promessa de compatibilidade com todas as variantes FITS (por exemplo, tabelas ASCII não são implementadas neste leitor).
+
+CSV/TSV/TXT: mantém linhas tabulares com valores vazios/inválidos quando o formato da linha ainda corresponde ao cabeçalho. Datas ISO válidas são convertidas em dias desde a época Unix somente para datas YYYY-MM-DD ou timestamps com fuso explícito (Z ou deslocamento). Datas impossíveis não são normalizadas. Datetimes sem fuso não são adivinhados. Se uma mesma coluna de tempo mistura coordenadas numéricas e tokens ISO, os tokens ISO ficam sem conversão até a origem/unidade comum ser confirmada; esse conflito é registrado no painel e no manifesto.
+
+Proveniência: a impressão digital é calculada localmente a partir dos bytes originais selecionados, antes de descompactar gzip. WebCrypto gera SHA-256 quando disponível; se não estiver disponível, o fallback FNV-1a-32 é rotulado explicitamente e NÃO é apresentado como SHA-256. O manifesto JSON não inclui os valores observacionais nem envia arquivos para um servidor.
+
+Os cálculos preservam os quatro pilares e a 13.05 WPE/CI; o CI continua experimental até a definição ser confirmada. A validação externa e os testes de cobertura estatística permanecem necessários para uso publicável. Consulte o kit e o relatório de auditoria distribuídos separadamente.
+
+Não publique este pacote na vitrine pública do BlazarLab. Arquivos observacionais não devem ser incluídos no pacote Lite.
