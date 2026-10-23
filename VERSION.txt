@@ -1,5 +1,0 @@
-BlazarLab Privado · 13.02 Lite — refinamento de interface (23/10/2026)
-Base visual: BlazarLab V7 Lite 1.3.51.
-Esta revisão refina navegação, resultados, nitidez dos gráficos, tela cheia e seleção de métodos avançados.
-A implementação segue como projeto privado/experimental; não publicar no repositório público da vitrine.
-Fisher–Shannon KDE e MSE-WPE/CI continuam identificados como estimadores experimentais.
