@@ -1,2 +1,0 @@
-BlazarLab Privado 13.08 Lite
-Biblioteca multifonte por arquivos/pastas/ZIP e importação local de NumPy .npy/.npz.
