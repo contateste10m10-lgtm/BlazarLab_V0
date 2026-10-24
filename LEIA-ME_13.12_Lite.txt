@@ -1,0 +1,44 @@
+BlazarLab Privado 13.12 Lite
+
+Biblioteca multifonte Swift/BAT, leitura simultânea e gráficos avançados ajustados.
+
+## O que há de novo na 13.12
+
+- A biblioteca do site permite selecionar várias curvas Swift/BAT ao mesmo tempo para comparação na galeria multifonte.
+- Para comparar várias curvas Swift/BAT na galeria, selecione uma banda comum (14–20 até 150–195 keV). O conjunto largo é projetado para uma tabela longa com tempo, taxa, erro e fonte apenas para a banda selecionada; os tempos originais são mantidos.
+- Para análise completa das oito bandas de uma curva, use “Abrir fonte no laboratório principal”, que continua aceitando uma fonte por vez.
+- A sobreposição de curvas de luz permite escolher de duas até oito fontes simultaneamente na mesma banda.
+- A exibição da terceira variável nos gráficos de bolhas usa faixa de raio menor e proporcionalidade de área, reduzindo o domínio visual de valores altos.
+- O limiar para gráficos de bolhas descritivos passa a três fontes quando há coluna de fonte mapeada. Isso não torna uma amostra pequena suficiente para inferência estatística.
+- A sessão preserva a origem de cada conjunto, impede duplicação ao acrescentar um ID já carregado e bloqueia misturas de esquemas incompatíveis (curvas brutas largas com tabelas de métricas).
+
+## Publicação
+
+Extraia o ZIP e envie o conteúdo da pasta para a raiz do repositório que publica a ferramenta. `index.html` deve ficar na raiz publicada. Não publique no repositório público dados com restrição de redistribuição. A página usa `biblioteca/manifest.json`, então teste os caminhos depois do commit no GitHub Pages.
+
+## Biblioteca Swift/BAT integrada
+
+`biblioteca/dados/swift-bat/` contém três recursos ZIP com uma tabela CSV larga por fonte para SWIFT J0017.1+8134, SWIFT J0042.9+3016B e SWIFT J0413.3+1659. Cada tabela tem uma linha por snapshot, uma coluna de tempo, tempos originais, exposição, identificação da fonte, oito taxas `RATE` e oito erros `RATE_ERR`. A origem e os limites de interpretação estão em `biblioteca/metadados/SWIFT_BAT_157M_CONVERSAO.md`.
+
+## Como testar mais de uma fonte Swift/BAT
+
+1. Abra Galeria Multifonte → Biblioteca do site e atualize o catálogo.
+2. Marque duas ou três curvas Swift/BAT.
+3. Escolha uma banda comum no controle “Banda Swift/BAT para comparação multifonte”.
+4. Clique “Carregar selecionados” ou “Adicionar à carga atual”.
+5. Confira o mapeamento de tempo, fluxo, banda e fonte, depois gere a galeria.
+6. Na sobreposição bruta, escolha a banda e marque 2–8 fontes.
+
+O desenho limita cada curva a no máximo 4.000 pontos para manter o gráfico responsivo. Isso afeta somente a representação visual: tabela e exportação mantêm os registros disponíveis. Confirme unidades e cadência antes de comparar curvas.
+
+## Gráficos de bolhas
+
+As bolhas são uma codificação descritiva de uma terceira variável pela área. O raio mínimo mantém valores baixos visíveis e a faixa máxima foi reduzida para evitar que pontos grandes encubram os demais. Com três fontes o gráfico pode aparecer para exploração, mas não se deve interpretar isso como suporte inferencial adequado.
+
+## Limites científicos
+
+Fisher–Shannon por KDE permanece experimental; o CI de WPE continua provisório até homologação da definição; os intervalos de modulação precisam de calibração externa. A galeria compara somente uma banda Swift/BAT por vez. Para analisar a curva Swift/BAT inteira nas oito bandas, abra uma fonte por vez no laboratório principal.
+
+## Limites técnicos
+
+A biblioteca é estática; não existe upload para um backend. Recursos são buscados sob demanda a partir do catálogo. Se testar `index.html` diretamente por `file://`, a política do navegador pode bloquear `fetch`; use GitHub Pages ou um servidor HTTP local. A validação visual completa por Chromium pode depender das políticas de navegação do ambiente.

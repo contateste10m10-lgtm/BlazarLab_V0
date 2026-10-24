@@ -1,0 +1,2 @@
+BlazarLab Privado 13.12 Lite
+Biblioteca multifonte Swift/BAT, bolhas dimensionadas por área e comparação simultânea de 2–8 fontes.

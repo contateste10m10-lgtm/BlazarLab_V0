@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "title": "Biblioteca astronômica do BlazarLab",
+  "description": "Catálogo de conjuntos públicos e demonstrativos. Recursos são carregados sob demanda; dados observacionais e sintéticos permanecem claramente identificados.",
+  "datasets": [
+    {
+      "id": "demo-multifonte-sintetico",
+      "title": "Demonstração multifonte — sintética",
+      "description": "576 linhas: 9 fontes sintéticas × 8 bandas × 8 janelas. Inclui SampEn, variabilidade robusta, modulação e colunas demonstrativas de Fisher–Shannon/WPE/CI. Não são observações reais.",
+      "path": "exemplos/demo_multifonte_SINTETICO.csv",
+      "format": "csv",
+      "synthetic": true,
+      "defaultSelected": false,
+      "license": "Gerado sinteticamente pelo BlazarLab",
+      "tags": [
+        "demonstração",
+        "multifonte",
+        "oito bandas"
+      ],
+      "analysisMode": "gallery-table"
+    },
+    {
+      "id": "swiftbat157-j0017-1-8134",
+      "title": "Swift/BAT 157 meses — SWIFT J0017.1+8134 · oito bandas snapshot",
+      "description": "Curva snapshot Swift/BAT em 8 bandas; 70,273 snapshots, uma linha por instante e 21 colunas: tempo relativo, tempos originais, exposição, fonte, oito taxas e oito incertezas. Contraparte: [HB89] 0014+813; classe BZQ; redshift 3.3660. Taxas/erros são cópias dos campos RATE/RATE_ERR; não há conversão adicional de unidade. O tempo é relativo em dias e os valores originais permanecem em segundos. Para comparar várias fontes na galeria, selecione uma banda comum; para analisar todas as oito bandas em profundidade, abra uma fonte por vez no laboratório principal.",
+      "path": "dados/swift-bat/swiftbat157-j0017-1-8134.zip",
+      "format": "zip",
+      "synthetic": false,
+      "defaultSelected": false,
+      "license": "Dados públicos do catálogo NASA/Swift-BAT; consulte a referência oficial da fonte e o README para citação. Nenhuma licença adicional foi declarada no arquivo fornecido.",
+      "tags": [
+        "NASA",
+        "Swift/BAT",
+        "157-month",
+        "snapshot",
+        "8 bandas",
+        "BZQ"
+      ],
+      "sourceUrl": "https://swift.gsfc.nasa.gov/results/bs157mon/9",
+      "sha256": "877a3c2ae941986f4140f728be4c66ce7137702d569b1db9e96463263a9b18f0",
+      "sizeBytes": 9443604,
+      "analysisMode": "main-lab-wide",
+      "sourceName": "SWIFT J0017.1+8134",
+      "instrumentName": "Swift/BAT",
+      "originalFilename": "BAT_157m_eight_band_snapshot_SWIFT J0017.1+8134.csv",
+      "sourceClass": "BZQ",
+      "redshift": "3.3660",
+      "counterpart": "[HB89] 0014+813"
+    },
+    {
+      "id": "swiftbat157-j0042-9-3016b",
+      "title": "Swift/BAT 157 meses — SWIFT J0042.9+3016B · oito bandas snapshot",
+      "description": "Curva snapshot Swift/BAT em 8 bandas; 58,074 snapshots, uma linha por instante e 21 colunas: tempo relativo, tempos originais, exposição, fonte, oito taxas e oito incertezas. Contraparte: 2MASX J00423991+3017515; classe BZQ; redshift 0.1408. Taxas/erros são cópias dos campos RATE/RATE_ERR; não há conversão adicional de unidade. O tempo é relativo em dias e os valores originais permanecem em segundos. Para comparar várias fontes na galeria, selecione uma banda comum; para analisar todas as oito bandas em profundidade, abra uma fonte por vez no laboratório principal.",
+      "path": "dados/swift-bat/swiftbat157-j0042-9-3016b.zip",
+      "format": "zip",
+      "synthetic": false,
+      "defaultSelected": false,
+      "license": "Dados públicos do catálogo NASA/Swift-BAT; consulte a referência oficial da fonte e o README para citação. Nenhuma licença adicional foi declarada no arquivo fornecido.",
+      "tags": [
+        "NASA",
+        "Swift/BAT",
+        "157-month",
+        "snapshot",
+        "8 bandas",
+        "BZQ"
+      ],
+      "sourceUrl": "https://swift.gsfc.nasa.gov/results/bs157mon/30",
+      "sha256": "5f21c7ea97b8fe3d3b3871ac6c1f917e5881fa5a2ba557608336f687190fed05",
+      "sizeBytes": 7759434,
+      "analysisMode": "main-lab-wide",
+      "sourceName": "SWIFT J0042.9+3016B",
+      "instrumentName": "Swift/BAT",
+      "originalFilename": "BAT_157m_eight_band_snapshot_SWIFT J0042.9+3016B.csv",
+      "sourceClass": "BZQ",
+      "redshift": "0.1408",
+      "counterpart": "2MASX J00423991+3017515"
+    },
+    {
+      "id": "swiftbat157-j0413-3-1659",
+      "title": "Swift/BAT 157 meses — SWIFT J0413.3+1659 · oito bandas snapshot",
+      "description": "Curva snapshot Swift/BAT em 8 bandas; 45,702 snapshots, uma linha por instante e 21 colunas: tempo relativo, tempos originais, exposição, fonte, oito taxas e oito incertezas. Contraparte: MG1 J041325+1659; classe BZQ; redshift não informado. Taxas/erros são cópias dos campos RATE/RATE_ERR; não há conversão adicional de unidade. O tempo é relativo em dias e os valores originais permanecem em segundos. Para comparar várias fontes na galeria, selecione uma banda comum; para analisar todas as oito bandas em profundidade, abra uma fonte por vez no laboratório principal.",
+      "path": "dados/swift-bat/swiftbat157-j0413-3-1659.zip",
+      "format": "zip",
+      "synthetic": false,
+      "defaultSelected": false,
+      "license": "Dados públicos do catálogo NASA/Swift-BAT; consulte a referência oficial da fonte e o README para citação. Nenhuma licença adicional foi declarada no arquivo fornecido.",
+      "tags": [
+        "NASA",
+        "Swift/BAT",
+        "157-month",
+        "snapshot",
+        "8 bandas",
+        "BZQ"
+      ],
+      "sourceUrl": "https://swift.gsfc.nasa.gov/results/bs157mon/210",
+      "sha256": "59ee552e7acd5118282e582f73a4e0420101bf7b6dc7c9272fb5c8bfa5ceeb64",
+      "sizeBytes": 6138952,
+      "analysisMode": "main-lab-wide",
+      "sourceName": "SWIFT J0413.3+1659",
+      "instrumentName": "Swift/BAT",
+      "originalFilename": "BAT_157m_eight_band_snapshot_SWIFT J0413.3+1659.csv",
+      "sourceClass": "BZQ",
+      "redshift": "",
+      "counterpart": "MG1 J041325+1659"
+    }
+  ]
+}
