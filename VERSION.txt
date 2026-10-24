@@ -1,2 +1,0 @@
-BlazarLab Privado 13.10 Lite
-Biblioteca de dados do site + arquivos locais, múltiplas fontes e proveniência.
