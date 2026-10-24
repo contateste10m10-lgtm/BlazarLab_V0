@@ -1,0 +1,2 @@
+BlazarLab Privado 13.11 Lite
+Biblioteca astronômica Swift/BAT integrada, catálogo e arquivos locais preservados.
