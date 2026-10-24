@@ -1,3 +1,0 @@
-Adicione aqui somente conjuntos que podem ser publicados junto com o site.
-Depois de adicionar um arquivo, registre-o em ../manifest.json usando um caminho relativo como "dados/meu_conjunto.csv".
-Dados privados devem ser carregados pela aba “Meus dados locais”; esta pasta publicada fica acessível pela internet.
